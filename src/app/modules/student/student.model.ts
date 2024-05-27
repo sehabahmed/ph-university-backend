@@ -6,8 +6,6 @@ import {
   UserName,
 } from './student.interface';
 import validator from 'validator';
-import bcrypt from 'bcrypt';
-import config from '../../index';
 
 const userNameValidationSchema = new Schema<UserName>({
   firstName: {
@@ -64,11 +62,6 @@ const studentValidationSchema = new Schema<TStudent>({
     unique: true,
     ref: 'User',
   },
-  password: {
-    type: String,
-    required: [true, 'Password is required'],
-    max: [20, 'Password cannot be more than 20 character'],
-  },
   name: {
     type: userNameValidationSchema,
     required: [true, 'Name is Required'],
@@ -115,25 +108,6 @@ const studentValidationSchema = new Schema<TStudent>({
   },
 });
 
-//pre save middleware / hook : will work on create() save()
-studentValidationSchema.pre('save', async function (next) {
-  //hashing password and save into DB
-
-  //eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-
-  next();
-});
-
-//post save middleware / hook
-studentValidationSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
-});
 
 //query middleware
 studentValidationSchema.pre('find', function (next) {

@@ -17,7 +17,6 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   userData.role = 'student';
 
   //set manually generated id
-
   userData.id = '35434563463';
 
   //create a user
@@ -25,7 +24,6 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
 
   //create a student
   if (Object.keys(newUser).length) {
-    //set id, _id as user
     studentData.id = newUser.id; //embedding Id
     studentData.user = newUser._id; //reference _id
 
