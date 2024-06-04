@@ -41,24 +41,27 @@ const localGuardianSchemaZod = z.object({
   address: z.string(),
 });
 
-const studentSchemaZod = z.object({
-  id: z.string(),
-  password: z.string().max(20),
-  name: userNameSchemaZod,
-  gender: z.enum(['male', 'female', 'other']),
-  dateOfBirth: z.string().optional(),
-  email: z.string().email({ message: 'Invalid email address' }),
-  contactNo: z.string(),
-  emergencyContactNo: z.string(),
-  bloodGroup: z
-    .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
-    .optional(),
-  presentAddress: z.string(),
-  permanentAddress: z.string(),
-  guardian: guardianSchemaZod,
-  localGuardian: localGuardianSchemaZod,
-  profileImg: z.string().optional(),
-  isDeleted: z.boolean().optional(),
-});
+const createStudentValidationSchema = z.object({
+    password: z.string().max(20),
+    student: z.object({
+      name: userNameSchemaZod,
+      gender: z.enum(['male', 'female', 'other']),
+      dateOfBirth: z.string().optional(),
+      email: z.string().email({ message: 'Invalid email address' }),
+      contactNo: z.string(),
+      emergencyContactNo: z.string(),
+      bloodGroup: z
+        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+        .optional(),
+      presentAddress: z.string(),
+      permanentAddress: z.string(),
+      guardian: guardianSchemaZod,
+      localGuardian: localGuardianSchemaZod,
+      admissionSemester: z.string(),
+      profileImg: z.string(),
+    }),
+  })
 
-export default studentSchemaZod;
+export const studentValidations = {
+  createStudentValidationSchema,
+};

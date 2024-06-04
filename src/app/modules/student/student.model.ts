@@ -101,6 +101,10 @@ const studentValidationSchema = new Schema<TStudent>({
     type: localGuardianValidationSchema,
     required: [true, 'Local Guardian Name is Required'],
   },
+  admissionSemester: {
+    type: Schema.Types.ObjectId,
+    ref: 'AcademicSemesterModel'
+  },
   profileImg: { type: String },
   isDeleted: {
     type: Boolean,
@@ -136,4 +140,4 @@ studentValidationSchema.pre('aggregate', function (next) {
 
 //model
 
-export const StudentModel = model<TStudent>('Student', studentValidationSchema);
+export const StudentModel = model<TStudent>('TStudent', studentValidationSchema);
