@@ -18,13 +18,16 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   //set student role
   userData.role = 'student';
 
-  // find academic semester info
-  const admissionSemester = await AcademicSemesterModel.findById(
-    payload.admissionSemester,
-  );
+// find academic semester info
+
+  const admissionSemester = await AcademicSemesterModel.findById(payload.admissionSemester);
+
+  if(!admissionSemester){
+    throw new Error('Admission semester Not found!');
+  }
 
   //set manually generated id
-  userData.id = generateStudentId(admissionSemester);
+  userData.id = await generateStudentId(admissionSemester);
 
   //create a user
   const newUser = await User.create(userData);
