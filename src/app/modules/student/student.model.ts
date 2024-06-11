@@ -62,6 +62,10 @@ const studentValidationSchema = new Schema<TStudent>({
     unique: true,
     ref: 'User',
   },
+  password: {
+    type: String,
+    required: [true, 'Password is Require']
+  },
   name: {
     type: userNameValidationSchema,
     required: [true, 'Name is Required'],
