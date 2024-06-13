@@ -12,7 +12,7 @@ const createStudentIntoDB = async (studentData: TStudent) => {
 };
 
 const getAllStudentsFromDb = async () => {
-  const result = await StudentModel.find();
+  const result = await StudentModel.find().populate('admissionSemester');
   return result;
 };
 

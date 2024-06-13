@@ -62,10 +62,6 @@ const studentValidationSchema = new Schema<TStudent>({
     unique: true,
     ref: 'User',
   },
-  password: {
-    type: String,
-    required: [true, 'Password is Require']
-  },
   name: {
     type: userNameValidationSchema,
     required: [true, 'Name is Required'],
@@ -144,4 +140,4 @@ studentValidationSchema.pre('aggregate', function (next) {
 
 //model
 
-export const StudentModel = model<TStudent>('TStudent', studentValidationSchema);
+export const StudentModel = model<TStudent>('StudentModel', studentValidationSchema);
