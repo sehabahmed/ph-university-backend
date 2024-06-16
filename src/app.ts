@@ -11,11 +11,23 @@ app.use(express.json());
 //application routes
 app.use('/api/v1/', router);
 
+
 app.use(cors());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('This server is running smoothly');
-});
+// app.get('/', (req: Request, res: Response) => {
+//   res.send('This server is running smoothly');
+// });
+
+//test
+
+const test = async (req: Request, res: Response) => {
+  // Promise.reject();
+
+  const a = 90;
+  res.send(a)
+}
+
+app.get('/', test)
 
 //Global Error Handler
 app.use(globalErrorHandler);

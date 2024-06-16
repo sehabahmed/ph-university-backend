@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 
 const userSchema = new Schema<TUSer>(
   {
-    id: { type: String, required: true },
+    id: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     needsPasswordChange: { type: Boolean },
     role: {
@@ -15,7 +15,7 @@ const userSchema = new Schema<TUSer>(
     status: {
       type: String,
       enum: ['in-progress', 'blocked'],
-      default: 'in-progress'
+      default: 'in-progress',
     },
     isDeleted: { type: Boolean, default: false },
   },
@@ -23,8 +23,6 @@ const userSchema = new Schema<TUSer>(
     timestamps: true,
   },
 );
-
-
 
 userSchema.pre('save', async function (next) {
   //hashing password and save into DB
@@ -45,7 +43,6 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 
-
 //Model
 
-export const User =  model<TUSer>("UserModel", userSchema)
+export const User = model<TUSer>('User', userSchema);
