@@ -15,10 +15,73 @@ const createStudentIntoDB = async (studentData: TStudent) => {
   return result;
 };
 
-const getAllStudentsFromDb = async () => {
-  const result = await StudentModel.find().populate('admissionSemester');
-  return result;
+const getAllStudentsFromDb = async (query: Record<string, unknown>) => {
+  //Search Query
+  // const studentSearchableFields = ['email', 'name.firstName', 'presentAddress'];
+
+  const queryObj = { ...query }; //copy
+
+  let searchTerm = '';
+
+  if (query?.searchTerm) {
+    searchTerm = query?.searchTerm as string;
+  }
+
+  const searchQuery = StudentModel.find({
+    $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
+      [field]: { $regex: searchTerm, $options: 'i' },
+    })),
+  });
+
+  console.log({query}, {queryObj});
+
+  //Filtering
+  const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
+
+  excludeFields.forEach((elem) => delete queryObj[elem]);
+
+  const filterQuery = searchQuery.find(queryObj).populate('admissionSemester');
+
+  let sort = '-createdAt';
+
+  if (query.sort) {
+    sort = query.sort as string;
+  }
+
+  const sortQuery = filterQuery.sort(sort);
+
+  let page = 1;
+  let limit = 1;
+  let skip = 0;
+
+  if (query.limit) {
+    limit = Number(query.limit);
+  }
+  if (query.page) {
+    page = Number(query.page);
+    skip = (page - 1) * limit;
+  }
+
+  const paginateQuery = sortQuery.skip(skip);
+
+  const limitQuery = paginateQuery.limit(limit);
+
+  // Field Limiting
+
+  let fields = '-__v';
+
+  if(query.fields){
+    fields = (query.fields as string).split(',').join(' ');
+    console.log({fields});
+  }
+
+  const fieldQuery = await limitQuery.select(fields)
+  
+
+  return fieldQuery;
 };
+
+//Get Single Product
 
 const getSingleStudentFromDb = async (id: string) => {
   const result = await StudentModel.findOne({ id }).populate(
@@ -32,7 +95,7 @@ const getSingleStudentFromDb = async (id: string) => {
 
 //update Student
 const updateStudentIntoDb = async (id: string, payload: Partial<TStudent>) => {
-  // Non premitive specific data update
+  // Non primitive specific data update
   const { name, guardian, localGuardian, ...remainingStudentData } = payload;
 
   const modifiedUpdatedData: Record<string, unknown> = {
@@ -54,8 +117,6 @@ const updateStudentIntoDb = async (id: string, payload: Partial<TStudent>) => {
       modifiedUpdatedData[`localGuardian.${key}`] = value;
     }
   }
-
-  console.log(modifiedUpdatedData);
 
   const result = await StudentModel.findOneAndUpdate(
     { id },
