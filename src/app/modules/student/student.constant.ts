@@ -1,0 +1,1 @@
+export const studentSearchableFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
