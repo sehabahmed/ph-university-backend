@@ -3,8 +3,12 @@ import { UserRoutes } from '../modules/users/user.route';
 import { StudentRoute } from '../modules/student/student.route';
 import { AcademicSemesterRoutes } from '../modules/academicSemester/academicSemester.routes';
 import { AcademicFacultyRoutes } from '../modules/academicFaculty/academicFaculty.route';
+<<<<<<< HEAD
 import { AcademicDepartmentRoutes } from '../modules/academicDepartment/academic.route';
 
+=======
+import { AcademicDepartmentRoutes } from '../modules/academicDepertment/academic.route';
+>>>>>>> origin/main
 
 const router = Router();
 
