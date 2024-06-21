@@ -23,8 +23,4 @@ router.patch(
   AcademicSemesterController.updateAcademicSemesterController,
 );
 
-<<<<<<< HEAD
 export const AcademicSemesterRoutes = router;
-=======
-export const AcademicSemesterRoutes = router;
->>>>>>> origin/main

@@ -9,8 +9,7 @@ const createUserNameSchemaZod = z.object({
     .max(20)
     .refine((value) => /^[A-Z]/.test(value), {
       message: 'First Name must start with a capital letter',
-    })
-    .optional(),
+    }),
   middleName: z.string().optional(),
   lastName: z
     .string()
@@ -23,35 +22,34 @@ const createUserNameSchemaZod = z.object({
         return lastNameStr === value;
       },
       { message: 'Last Name must be capitalized' },
-    )
-    .optional(),
+    ),
 });
 
 const createGuardianSchemaZod = z.object({
-  fatherName: z.string().optional(),
-  fatherOccupation: z.string().optional(),
-  fatherContactNo: z.string().optional(),
-  motherName: z.string().optional(),
-  motherOccupation: z.string().optional(),
-  motherContactNo: z.string().optional(),
+  fatherName: z.string(),
+  fatherOccupation: z.string(),
+  fatherContactNo: z.string(),
+  motherName: z.string(),
+  motherOccupation: z.string(),
+  motherContactNo: z.string(),
 });
 
 const createLocalGuardianSchemaZod = z.object({
-  name: z.string().optional(),
-  occupation: z.string().optional(),
-  contactNo: z.string().optional(),
-  address: z.string().optional(),
+  name: z.string(),
+  occupation: z.string(),
+  contactNo: z.string(),
+  address: z.string(),
 });
 
 const createStudentValidationSchema = z.object({
   body: z.object({
-    password: z.string().max(20).optional(),
+    password: z.string().max(20),
     student: z.object({
-      name: createUserNameSchemaZod.optional(),
-      gender: z.enum(['male', 'female', 'other']).optional(),
-      dateOfBirth: z.string().optional(),
-      email: z.string().email({ message: 'Invalid email address' }).optional(),
-      contactNo: z.string().optional(),
+      name: createUserNameSchemaZod,
+      gender: z.enum(['male', 'female', 'other']),
+      dateOfBirth: z.string(),
+      email: z.string().email({ message: 'Invalid email address' }),
+      contactNo: z.string(),
       emergencyContactNo: z.string().optional(),
       bloodGroup: z
         .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
@@ -59,9 +57,10 @@ const createStudentValidationSchema = z.object({
       presentAddress: z.string().optional(),
       permanentAddress: z.string().optional(),
       guardian: createGuardianSchemaZod.optional(),
-      localGuardian: createLocalGuardianSchemaZod.optional(),
-      admissionSemester: z.string().optional(),
-      profileImg: z.string().optional(),
+      localGuardian: createLocalGuardianSchemaZod,
+      admissionSemester: z.string(),
+      academicDepartment: z.string(),
+      profileImg: z.string(),
     }).optional(),
   }).optional(),
 });
@@ -127,6 +126,7 @@ const updateStudentValidationSchema = z.object({
       guardian: updateGuardianSchemaZod.optional(),
       localGuardian: updateLocalGuardianSchemaZod.optional(),
       admissionSemester: z.string().optional(),
+      academicDepartment: z.string().optional(),
       profileImg: z.string().optional(),
     }).optional(),
   }).optional(),

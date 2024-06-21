@@ -1,7 +1,7 @@
-import { TacademicFaculty } from './academicFaculty.interface';
+import { TAcademicFaculty } from './academicFaculty.interface';
 import { AcademicFaculty } from './academicFaculty.model';
 
-const createAcademicFacultyIntoDB = async (payload: TacademicFaculty) => {
+const createAcademicFacultyIntoDB = async (payload: TAcademicFaculty) => {
   const result = AcademicFaculty.create(payload);
   return result;
 };
@@ -18,7 +18,7 @@ const getSingleAcademicFacultyFromDB = async (id: string) => {
 
 const updateAcademicFacultyFromDB = async (
   id: string,
-  payload: Partial<TacademicFaculty>,
+  payload: Partial<TAcademicFaculty>,
 ) => {
   const result = await AcademicFaculty.findOneAndUpdate({ _id: id }, payload, {
     new: true,

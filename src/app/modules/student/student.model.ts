@@ -103,7 +103,11 @@ const studentValidationSchema = new Schema<TStudent>({
   },
   admissionSemester: {
     type: Schema.Types.ObjectId,
-    ref: 'AcademicSemesterModel'
+    ref: 'AcademicSemesterModel',
+  },
+  academicDepartment: {
+    type: Schema.Types.ObjectId,
+    ref: 'AcademicDepartment',
   },
   profileImg: { type: String },
   isDeleted: {
@@ -111,7 +115,6 @@ const studentValidationSchema = new Schema<TStudent>({
     default: false,
   },
 });
-
 
 //query middleware
 studentValidationSchema.pre('find', function (next) {
@@ -125,7 +128,7 @@ studentValidationSchema.pre('findOne', function (next) {
 });
 
 studentValidationSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true }}});
   // console.log(this.pipeline());
   next();
 });
@@ -140,4 +143,7 @@ studentValidationSchema.pre('aggregate', function (next) {
 
 //model
 
-export const StudentModel = model<TStudent>('StudentModel', studentValidationSchema);
+export const StudentModel = model<TStudent>(
+  'StudentModel',
+  studentValidationSchema,
+);

@@ -54,7 +54,7 @@ const userNameValidationSchema = Joi.object({
     guardian: guardianValidationSchema.required(),
     localGuardian: localGuardianValidationSchema.required(),
     profileImg: Joi.string().optional(),
-    isActive: Joi.string().valid('active', 'block').default('active'),
+    isActive: Joi.string().valid('active', 'block').default('active'),    
   });
 
   export default studentValidationSchema;

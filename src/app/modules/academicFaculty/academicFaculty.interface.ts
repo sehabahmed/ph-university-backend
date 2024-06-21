@@ -1,3 +1,3 @@
-export type TacademicFaculty = {
-    name: string
-}
+export type TAcademicFaculty = {
+  name: string;
+};
