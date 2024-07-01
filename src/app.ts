@@ -7,12 +7,14 @@ const app: Application = express();
 
 //middleware
 app.use(express.json());
-
+app.use(cors({origin: ['http://localhost:5173']}));
 //application routes
 app.use('/api/v1/', router);
 
+// const frontServer = http://localhost:5173/
 
-app.use(cors());
+
+
 
 // app.get('/', (req: Request, res: Response) => {
 //   res.send('This server is running smoothly');

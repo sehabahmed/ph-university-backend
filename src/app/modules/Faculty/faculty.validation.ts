@@ -1,3 +1,69 @@
+// import { z } from 'zod';
+// import { BloodGroup, Gender } from './faculty.constant';
+
+// // Define Zod schema for TUserName
+// const createUserNameSchema = z.object({
+//   firstName: z.string().max(20, 'Name can not be more than 20 characters'),
+//   middleName: z.string().optional(),
+//   lastName: z.string().max(20, 'Name can not be more than 20 characters'),
+// });
+
+// // Define Zod schema for TFaculty
+// const createFacultyValidationSchema = z.object({
+//   body: z.object({
+//     id: z.string(),
+//     user: z.string(), // Assuming user ID is a string
+//     designation: z.string(),
+//     name: createUserNameSchema,
+//     gender: z.enum([...Gender] as [string, ...string[]]),
+//     dateOfBirth: z.date().optional(),
+//     email: z.string().email('Invalid email format'),
+//     contactNo: z.string(),
+//     emergencyContactNo: z.string(),
+//     bloodGroup: z.enum([...BloodGroup] as [string, ...string[]]).optional(),
+//     presentAddress: z.string(),
+//     permanentAddress: z.string(),
+//     profileImg: z.string().optional(),
+//     academicDepartment: z.string(),
+//     isDeleted: z.boolean().optional(),
+//   }),
+// });
+
+// const updateUserNameValidationSchema = z.object({
+//   firstName: z.string().max(20, 'Name can not be more than 20 characters').optional(),
+//   middleName: z.string().optional(),
+//   lastName: z.string().max(20, 'Name can not be more than 20 characters').optional(),
+// });
+
+// const updateFacultyValidationSchema = z.object({
+//   id: z.string().optional(),
+//   user: z.string().optional(), // Assuming user ID is a string
+//   designation: z.string().optional(),
+//   name: updateUserNameValidationSchema.optional(),
+//   gender: z.enum([...Gender] as [string, ...string[]]).optional(),
+//   dateOfBirth: z.date().optional(),
+//   email: z.string().email('Invalid email format').optional(),
+//   contactNo: z.string().optional(),
+//   emergencyContactNo: z.string().optional(),
+//   bloodGroup: z.enum([...BloodGroup] as [string, ...string[]]).optional(),
+//   presentAddress: z.string().optional(),
+//   permanentAddress: z.string().optional(),
+//   profileImg: z.string().optional(),
+//   academicDepartment: z.string().optional(),
+//   isDeleted: z.boolean().optional(),
+// });
+
+// export const facultyValidations = {
+//   createFacultyValidationSchema,
+//   updateFacultyValidationSchema,
+// };
+
+
+
+
+
+
+
 import { z } from 'zod';
 import { BloodGroup, Gender } from './faculty.constant';
 
@@ -5,10 +71,7 @@ const createUserNameValidationSchema = z.object({
   firstName: z
     .string()
     .min(1)
-    .max(20)
-    .refine((value) => /^[A-Z]/.test(value), {
-      message: 'First Name must start with a capital letter',
-    }),
+    .max(20),
   middleName: z.string(),
   lastName: z.string(),
 });
@@ -49,7 +112,7 @@ export const updateFacultyValidationSchema = z.object({
       email: z.string().email().optional(),
       contactNo: z.string().optional(),
       emergencyContactNo: z.string().optional(),
-      bloogGroup: z.enum([...BloodGroup] as [string, ...string[]]).optional(),
+      bloodGroup: z.enum([...BloodGroup] as [string, ...string[]]).optional(),
       presentAddress: z.string().optional(),
       permanentAddress: z.string().optional(),
       profileImg: z.string().optional(),

@@ -27,9 +27,11 @@ const createFaculty = catchAsync(async (req, res) => {
 
   const { password, faculty: facultyData } = req.body;
 
+  // console.log(facultyData);
+  // console.log(req.body);
   //will call service function to send data
   const result = await UserServices.createFacultyIntoDB(password, facultyData);
-
+// console.log(result);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -37,6 +39,7 @@ const createFaculty = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
 
 
 const createAdmin = catchAsync(async (req, res) => {

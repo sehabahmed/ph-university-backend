@@ -1,19 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
-import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 import { TFaculty } from './faculty.interface';
 import { Faculty } from './faculty.model';
 import { User } from '../users/user.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { FacultySearchableFields } from './faculty.constant';
 
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
-  const result = new QueryBuilder(
+  const facultyQuery = new QueryBuilder(
     Faculty.find().populate('academicDepartment'),
     query,
   )
+    .search(FacultySearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await facultyQuery.modelQuery;
   return result;
 };
+
 
 const getSingleFacultyFromDB = async (id: string) => {
   const result = await Faculty.findById(id).populate('academicDepartment');

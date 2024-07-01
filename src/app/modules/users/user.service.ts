@@ -12,6 +12,7 @@ import httpStatus from 'http-status';
 import { TFaculty } from '../Faculty/faculty.interface';
 import { AcademicDepartment } from '../academicDepartment/academicDepertment.model';
 import { Admin } from '../Admin/admin.model';
+import { Faculty } from '../Faculty/faculty.model';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   //create a new user object
@@ -71,6 +72,8 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
 };
 
 const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
+
+// console.log(payload);
   //Create a new user object
   const userData: Partial<TUSer> = {};
 
@@ -78,9 +81,11 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
 
   userData.password = password || (config.default_password as string);
 
+
   //set Student Role
   userData.role = 'faculty';
-
+  // userData.email = payload.email;
+  
   //find academic department info
   const academicDepartment = await AcademicDepartment.findById(
     payload.academicDepartment,
@@ -90,6 +95,8 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     throw new AppError(400, 'Academic department not found');
   }
 
+  
+
   const session = await mongoose.startSession();
 
   try {
@@ -98,7 +105,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     userData.id = await generatedFacultyId();
 
     // Create a user (transaction 1)
-    const newUser = await User.create([userData], { session }); //array
+    const newUser = await User.create([userData], {session}); //array
 
     // Create a faculty
     if (!newUser.length) {
@@ -111,7 +118,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     payload.user = newUser[0]._id; //reference _id
 
     // Create a Faculty (transaction 2)
-    const newFaculty = await User.create([userData], { session }); //array
+    const newFaculty = await Faculty.create([payload], {session}); //array
 
     if (!newFaculty.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create Faculty');
@@ -121,9 +128,10 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
 
     return newFaculty;
   } catch (err: any) {
+
     await session.abortTransaction();
     await session.endSession();
-    throw new Error(err);
+    throw new Error(err)
   }
 };
 
