@@ -17,7 +17,8 @@ const createTodo = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllTodo = catchAsync(async (req: Request, res: Response) => {
-  const result = await TodoServices.createTodoIntoDB(req.body);
+  const { priority } = req.query;
+  const result = await TodoServices.getAllTodoFromDB(priority as string);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -2,7 +2,6 @@ import { z } from 'zod';
 
 const createTodoValidationSchema = z.object({
   body: z.object({
-    id: z.string().optional(),
     title: z.string(),
     description: z.string(),
     isCompleted: z.boolean().optional().default(false),
@@ -12,9 +11,9 @@ const createTodoValidationSchema = z.object({
 
 const updateTodoValidationSchema = z.object({
   body: z.object({
-    id: z.string().optional(),
-    title: z.string(),
-    description: z.string(),
+
+    title: z.string().optional(),
+    description: z.string().optional(),
     isCompleted: z.boolean().optional().default(false),
     priority: z.string().optional()
   }),

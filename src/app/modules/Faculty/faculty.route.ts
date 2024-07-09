@@ -1,9 +1,12 @@
 import express from 'express';
 import { FacultyControllers } from './faculty.controller';
 import validateRequest from '../utils/validateRequest';
-import { updateFacultyValidationSchema } from './faculty.validation';
+import {
+  updateFacultyValidationSchema,
+} from './faculty.validation';
 
 const router = express.Router();
+
 
 router.get('/:id', FacultyControllers.getSingleFaculty);
 

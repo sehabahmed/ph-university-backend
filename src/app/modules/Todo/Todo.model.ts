@@ -2,10 +2,7 @@ import { Schema, model } from 'mongoose';
 import { TTodo } from './Todo.interface';
 
 const TodoSchema = new Schema<TTodo>({
-  id: {
-    type: String,
-    unique: true
-  },
+
   title: {
     type: String,
     required: true,

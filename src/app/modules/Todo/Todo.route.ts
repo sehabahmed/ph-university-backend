@@ -12,10 +12,10 @@ router.post(
 
 router.get('/', TodoControllers.getAllTodo);
 
-router.patch(
+router.put(
   '/:id',
   validateRequest(TodoValidations.updateTodoValidationSchema),
-  TodoControllers.getAllTodo,
+  TodoControllers.updateSingleTodoIntoDB,
 );
 
 export const TodoRoutes = router;
