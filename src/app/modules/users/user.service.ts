@@ -2,10 +2,14 @@
 import { TStudent } from '../student/student.interface';
 import { User } from './user.model';
 import config from '../../index';
-import { TUSer } from './user.interface';
+import { TUser } from './user.interface';
 import { StudentModel } from '../student/student.model';
 import { AcademicSemesterModel } from '../academicSemester/academicSemester.model';
-import { generateStudentId, generatedAdminId, generatedFacultyId } from './user.utils';
+import {
+  generateStudentId,
+  generatedAdminId,
+  generatedFacultyId,
+} from './user.utils';
 import mongoose from 'mongoose';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
@@ -13,11 +17,12 @@ import { TFaculty } from '../Faculty/faculty.interface';
 import { AcademicDepartment } from '../academicDepartment/academicDepertment.model';
 import { Admin } from '../Admin/admin.model';
 import { Faculty } from '../Faculty/faculty.model';
+import { TAdmin } from '../Admin/admin.interface';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   //create a new user object
 
-  const userData: Partial<TUSer> = {};
+  const userData: Partial<TUser> = {};
 
   //if password not given, use default password
 
@@ -72,20 +77,18 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
 };
 
 const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
-
-// console.log(payload);
+  // console.log(payload);
   //Create a new user object
-  const userData: Partial<TUSer> = {};
+  const userData: Partial<TUser> = {};
 
   //if password is not given, use Default password
 
   userData.password = password || (config.default_password as string);
 
-
   //set Student Role
   userData.role = 'faculty';
   // userData.email = payload.email;
-  
+
   //find academic department info
   const academicDepartment = await AcademicDepartment.findById(
     payload.academicDepartment,
@@ -103,7 +106,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     userData.id = await generatedFacultyId();
 
     // Create a user (transaction 1)
-    const newUser = await User.create([userData], {session}); //array
+    const newUser = await User.create([userData], { session }); //array
 
     // Create a faculty
     if (!newUser.length) {
@@ -116,7 +119,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     payload.user = newUser[0]._id; //reference _id
 
     // Create a Faculty (transaction 2)
-    const newFaculty = await Faculty.create([payload], {session}); //array
+    const newFaculty = await Faculty.create([payload], { session }); //array
 
     if (!newFaculty.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create Faculty');
@@ -126,16 +129,15 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
 
     return newFaculty;
   } catch (err: any) {
-
     await session.abortTransaction();
     await session.endSession();
-    throw new Error(err)
+    throw new Error(err);
   }
 };
 
-const createAdminIntoDB = async (password: string, payload: TFaculty) => {
+const createAdminIntoDB = async (password: string, payload: TAdmin) => {
   //Create a new user object
-  const userData: Partial<TUSer> = {};
+  const userData: Partial<TUser> = {};
 
   //if password is not given, use Default password
 
@@ -165,7 +167,7 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
     payload.user = newUser[0]._id; //reference _id
 
     // Create a Admin (transaction 2)
-    const newAdmin = await Admin.create([userData], { session }); //array
+    const newAdmin = await Admin.create([payload], { session }); //array
 
     if (!newAdmin.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create Admin');
@@ -184,5 +186,5 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
 export const UserServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
-  createAdminIntoDB
+  createAdminIntoDB,
 };

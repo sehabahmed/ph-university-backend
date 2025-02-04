@@ -2,6 +2,7 @@ import { UserServices } from './user.service';
 import sendResponse from '../utils/sendResponse';
 import httpStatus from 'http-status';
 import catchAsync from '../utils/catchAsync';
+import { userValidation } from './user.validation';
 
 const createStudent = catchAsync(async (req, res) => {
   //creating a schema validation using Joi

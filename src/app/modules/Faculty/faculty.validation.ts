@@ -61,9 +61,6 @@
 
 
 
-
-
-
 import { z } from 'zod';
 import { BloodGroup, Gender } from './faculty.constant';
 
@@ -120,8 +117,3 @@ export const updateFacultyValidationSchema = z.object({
     }),
   }),
 });
-
-export const studentValidations = {
-  createFacultyValidationSchema,
-  updateFacultyValidationSchema,
-};

@@ -2,11 +2,17 @@
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import AppError from '../../errors/AppError';
-import { TFaculty } from './faculty.interface';
+import { FacultyModel, TFaculty } from './faculty.interface';
 import { Faculty } from './faculty.model';
 import { User } from '../users/user.model';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { FacultySearchableFields } from './faculty.constant';
+
+const createFaculty = async(payload: FacultyModel) => {
+  const result = await Faculty.create(payload);
+
+  return result;
+}
 
 
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
@@ -92,6 +98,7 @@ const deleteFacultyFromDB = async (id: string) => {
 };
 
 export const FacultyServices = {
+  createFaculty,
   getAllFacultiesFromDB,
   getSingleFacultyFromDB,
   updateFacultyIntoDB,

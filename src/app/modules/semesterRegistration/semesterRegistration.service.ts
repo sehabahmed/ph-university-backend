@@ -5,6 +5,8 @@ import { TSemesterRegistration } from './semesterRegistration.interface';
 import { SemesterRegistration } from './semesterRegistration.model';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { RegistrationStatus } from './semesterRegistration.constant';
+import mongoose from 'mongoose';
+import { OfferedCourse } from '../OfferedCourse/OfferedCourse.model';
 
 const createSemesterRegistration = async (payload: TSemesterRegistration) => {
   const academicSemester = payload?.academicSemester;
@@ -13,6 +15,7 @@ const createSemesterRegistration = async (payload: TSemesterRegistration) => {
 
   const isThereAnyUpcomingOrOngoingSemester =
     await SemesterRegistration.findOne({
+      academicSemester,
       $or: [{ status: 'UPCOMING' }, { status: 'ONGOING' }],
     });
 
@@ -93,14 +96,20 @@ const updateSemesterRegistrationIntoDB = async (
   }
 
   //UPCOMING ==> ONGOING ==> ENDED
-  if (currentSemesterStatus === RegistrationStatus.UPCOMING && requestedStatus === RegistrationStatus.ENDED) {
+  if (
+    currentSemesterStatus === RegistrationStatus.UPCOMING &&
+    requestedStatus === RegistrationStatus.ENDED
+  ) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       `You can't directly change from ${currentSemesterStatus} to ${requestedStatus}`,
     );
   }
 
-  if (currentSemesterStatus === RegistrationStatus.ONGOING && requestedStatus === RegistrationStatus.UPCOMING) {
+  if (
+    currentSemesterStatus === RegistrationStatus.ONGOING &&
+    requestedStatus === RegistrationStatus.UPCOMING
+  ) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       `You can't directly change from ${currentSemesterStatus} to ${requestedStatus}`,
@@ -115,9 +124,52 @@ const updateSemesterRegistrationIntoDB = async (
   return result;
 };
 
+const deleteSemesterRegistrationFromDB = async (id: string) => {
+  // start a session for the transaction
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    //check if the semester registration exists
+
+    const semesterRegistration = await SemesterRegistration.findById(id);
+
+    if (!semesterRegistration) {
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        'Semester Registratin can not found!',
+      );
+    }
+
+    //Delete all related Offered course
+    await OfferedCourse.deleteMany({ semesterRegistration: id }).session(
+      session,
+    );
+
+    //Delete semesterRegistration
+    const result =
+      await SemesterRegistration.findByIdAndDelete(id).session(session);
+
+    //commit the transaction
+    await session.commitTransaction();
+    session.endSession();
+
+    return result;
+  } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'Semester Registration Deletation Failed',
+    );
+  }
+};
+
 export const SemesterRegistrationService = {
   createSemesterRegistration,
   getAllSemesterRegistrationFromDB,
   getSingleSemesterRegistrationFromDB,
   updateSemesterRegistrationIntoDB,
+  deleteSemesterRegistrationFromDB,
 };

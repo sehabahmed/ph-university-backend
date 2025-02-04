@@ -7,12 +7,12 @@ import { User } from '../users/user.model';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { studentSearchableFields } from './student.constant';
 
-const createStudentIntoDB = async (studentData: TStudent) => {
+const createStudentIntoDB = async (payload: TStudent) => {
   //static method
   // if(await TStudent.isUserExists(studentData.id)){
   //   throw new Error("User Already Exists!")
   // }
-  const result = await StudentModel.create(studentData);
+  const result = await StudentModel.create(payload);
 
   return result;
 };
@@ -82,7 +82,16 @@ const getAllStudentsFromDb = async (query: Record<string, unknown>) => {
 
   //   return fieldQuery;
 
-  const studentQuery = new QueryBuilder(StudentModel.find().populate('admissionSemester').populate({ path: 'academicDepartment', populate: { path: 'academicFaculty'}}), query)
+  const studentQuery = new QueryBuilder(
+    StudentModel.find()
+      .populate('user')
+      .populate('admissionSemester')
+      .populate({
+        path: 'academicDepartment',
+        populate: { path: 'academicFaculty' },
+      }),
+    query,
+  )
     .search(studentSearchableFields)
     .filter()
     .sort()
@@ -96,9 +105,7 @@ const getAllStudentsFromDb = async (query: Record<string, unknown>) => {
 //Get Single Product
 
 const getSingleStudentFromDb = async (id: string) => {
-  const result = await StudentModel.findById( id ).populate(
-    'admissionSemester',
-  );
+  const result = await StudentModel.findById(id).populate('admissionSemester');
 
   // const result = await StudentModel.aggregate([{ $match: { id: id } }]);
 
@@ -131,7 +138,7 @@ const updateStudentIntoDb = async (id: string, payload: Partial<TStudent>) => {
   }
 
   const result = await StudentModel.findOneAndUpdate(
-    { id } ,
+    { id },
     modifiedUpdatedData,
     { new: true, runValidators: true },
   );

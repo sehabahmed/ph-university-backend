@@ -13,9 +13,6 @@ app.use('/api/v1/', router);
 
 // const frontServer = http://localhost:5173/
 
-
-
-
 // app.get('/', (req: Request, res: Response) => {
 //   res.send('This server is running smoothly');
 // });

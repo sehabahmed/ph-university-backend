@@ -14,8 +14,22 @@ router.post(
 
 router.get('/', SemesterRegistrationController.getAllSemesterRegistration);
 
-router.get('/:registrationId', SemesterRegistrationController.getSingleSemesterRegistration);
+router.get(
+  '/:registrationId',
+  SemesterRegistrationController.getSingleSemesterRegistration,
+);
 
-router.patch('/:registrationId', validateRequest(semesterRegistrationValidations.updateRegistrationValidationSchema), SemesterRegistrationController.updateSemesterRegistration);
+router.patch(
+  '/:registrationId',
+  validateRequest(
+    semesterRegistrationValidations.updateRegistrationValidationSchema,
+  ),
+  SemesterRegistrationController.updateSemesterRegistration,
+);
+
+router.delete(
+  '/:id',
+  SemesterRegistrationController.deleteSemesterRegistration,
+);
 
 export const SemesterRegistrationRoutes = router;
