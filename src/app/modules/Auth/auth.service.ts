@@ -6,6 +6,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import config from '../../index';
 import bcrypt from 'bcrypt';
 import { createToken } from './auth.utils';
+import jwt from 'jsonwebtoken';
 
 const loginUser = async (payload: TLoginUser) => {
   //checking if the user is exists
@@ -41,9 +42,17 @@ const loginUser = async (payload: TLoginUser) => {
     role: user.role as string,
   };
 
-  const accessToken = createToken(jwtPayload, config.jwt_access_secret as string, config.jwt_access_expires_in as string);
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  );
 
-  const refreshToken = createToken(jwtPayload, config.jwt_refresh_secret as string, config.jwt_refresh_expires_in as string)
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string,
+  );
 
   return {
     accessToken,
@@ -57,8 +66,8 @@ const changePassword = async (
   userData: JwtPayload,
   payload: { oldPassword: string; newPassword: string },
 ) => {
-    //checking if the user is exists
-  
+  //checking if the user is exists
+
   const user = await User.isUserExistsByCustomId(userData.userId);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User Not Found!');
@@ -104,7 +113,66 @@ const changePassword = async (
   return null;
 };
 
+//Refresh Token
+
+const refreshToken = async (token: string) => {
+  //check if the given token is valid
+
+  const decoded = jwt.verify(
+    token,
+    config.jwt_refresh_secret as string,
+  ) as JwtPayload;
+
+  const { userId, iat } = decoded;
+
+  //checking if the user is exists
+  const user = await User.isUserExistsByCustomId(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User Not Found!');
+  }
+
+  //checking if the user is already deleted
+  const isDeleted = user.isDeleted;
+
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted');
+  }
+
+  //check if the user status is blocked
+  const userStatus = user.status;
+
+  if (userStatus === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This User is blocked!');
+  }
+
+  //check if password changed and invalid authorized JWT
+  if (
+    user.passwordChangedAt &&
+    User.isJWTIssuedBeforePasswordChanged(user.passwordChangedAt, iat as number)
+  ) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not Authorized!');
+  }
+
+  //create token and send to the client
+
+  const jwtPayload = {
+    userId: user.id,
+    role: user.role as string,
+  };
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  );
+
+  return {
+    accessToken,
+  };
+};
+
 export const AuthServices = {
   loginUser,
   changePassword,
+  refreshToken,
 };
