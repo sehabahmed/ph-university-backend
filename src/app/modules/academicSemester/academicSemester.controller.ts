@@ -1,6 +1,6 @@
-import sendResponse from '../utils/sendResponse';
+import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
-import catchAsync from '../utils/catchAsync';
+import catchAsync from '../../utils/catchAsync';
 import { AcademicSemesterServices } from './academicSemester.service';
 
 const createAcademicController = catchAsync(async (req, res) => {

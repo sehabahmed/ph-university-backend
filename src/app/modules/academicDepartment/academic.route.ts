@@ -1,5 +1,5 @@
 import express from 'express';
-import validateRequest from '../utils/validateRequest';
+import validateRequest from '../../utils/validateRequest';
 import { AcademicDepartmentValidations } from './academicDepartment.validation';
 import { AcademicDepartmentControllers } from './academicDepartment.controller';
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import validateRequest from '../utils/validateRequest';
+import validateRequest from '../../utils/validateRequest';
 import { OfferedCourseValidations } from './OfferedCourse.validation';
 import { OfferedCourseController } from './OfferedCourse.controller';
 const router = express.Router();

@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
-import catchAsync from '../utils/catchAsync';
-import sendResponse from '../utils/sendResponse';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
 import { AuthServices } from './auth.service';
 import config from '../../index';
 
@@ -20,7 +20,6 @@ const loginUser = catchAsync(async (req, res) => {
     message: 'User is Logged in Successfully',
     data: {
       accessToken,
-      refreshToken,
       needsPasswordChage,
     },
   });
@@ -52,8 +51,22 @@ const refreshToken = catchAsync(async (req, res) => {
   });
 });
 
+const forgetPassword = catchAsync(async (req, res) => {
+  const  userId  = req.body.id;
+
+  const result = await AuthServices.forgetPassword(userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Reset Generated Link Successfully!',
+    data: result,
+  });
+});
+
 export const AuthController = {
   loginUser,
   changePassword,
   refreshToken,
+  forgetPassword,
 };

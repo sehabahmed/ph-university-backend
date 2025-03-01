@@ -1,7 +1,7 @@
 import express from 'express';
 import { AdminControllers } from './admin.controller';
 import { updateAdminValidationSchema } from './admin.validation';
-import validateRequest from '../utils/validateRequest';
+import validateRequest from '../../utils/validateRequest';
 import auth from '../../middleware/auth';
 import { USER_ROLE } from '../users/user.constant';
 

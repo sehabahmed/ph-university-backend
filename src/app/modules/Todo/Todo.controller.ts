@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
-import catchAsync from '../utils/catchAsync';
-import sendResponse from '../utils/sendResponse';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
 import { Todo } from './Todo.model';
 import { Request, Response } from 'express';
 import { TodoServices } from './Todo.service';

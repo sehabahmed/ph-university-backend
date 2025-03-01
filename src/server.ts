@@ -18,13 +18,13 @@ async function main() {
 
 main();
 
-// process.on('unhandledRejection', () => {
-//   console.log(`😡 unhandledRejection is detected, shutting down!...`);
+process.on('unhandledRejection', () => {
+  console.log(`😡 unhandledRejection is detected, shutting down!...`);
 
-//   if (server) {
-//     server.close(() => {
-//       process.exit(1);
-//     });
-//   }
-//   process.exit(1);
-// });
+  if (server) {
+    server.close(() => {
+      process.exit(1);
+    });
+  }
+  process.exit(1);
+});

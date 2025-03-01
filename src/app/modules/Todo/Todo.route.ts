@@ -1,5 +1,5 @@
 import express from 'express';
-import validateRequest from '../utils/validateRequest';
+import validateRequest from '../../utils/validateRequest';
 import { TodoValidations } from './Todo.validation';
 import { TodoControllers } from './Todo.controller';
 const router = express.Router();

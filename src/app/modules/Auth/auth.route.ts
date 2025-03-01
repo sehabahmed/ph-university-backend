@@ -1,5 +1,5 @@
 import express from 'express';
-import validateRequest from '../utils/validateRequest';
+import validateRequest from '../../utils/validateRequest';
 import { AuthValidation } from './auth.validation';
 import { AuthController } from './auth.controller';
 import auth from '../../middleware/auth';
@@ -19,6 +19,16 @@ router.post(
   AuthController.changePassword,
 );
 
-router.post('/refresh-token', validateRequest(AuthValidation.refreshTokenValidationSchema), AuthController.refreshToken)
+router.post(
+  '/refresh-token',
+  validateRequest(AuthValidation.refreshTokenValidationSchema),
+  AuthController.refreshToken,
+);
+
+router.post(
+  '/forget-password',
+  validateRequest(AuthValidation.forgetPasswordValidationSchema),
+  AuthController.forgetPassword,
+);
 
 export const AuthRoutes = router;

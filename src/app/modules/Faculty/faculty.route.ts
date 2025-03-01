@@ -1,6 +1,6 @@
 import express from 'express';
 import { FacultyControllers } from './faculty.controller';
-import validateRequest from '../utils/validateRequest';
+import validateRequest from '../../utils/validateRequest';
 import {
   createFacultyValidationSchema,
   updateFacultyValidationSchema,

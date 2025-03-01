@@ -1,17 +1,13 @@
 import { UserServices } from './user.service';
-import sendResponse from '../utils/sendResponse';
+import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
-import catchAsync from '../utils/catchAsync';
-import { userValidation } from './user.validation';
+import catchAsync from '../../utils/catchAsync';
 
 const createStudent = catchAsync(async (req, res) => {
   //creating a schema validation using Joi
 
   const { password, student: studentData } = req.body;
 
-  //data validation using Zod
-
-  // const zodParsedData = userValidation.parse(studentData);
 
   //will call service function to send data
   const result = await UserServices.createStudentIntoDB(password, studentData);
@@ -28,8 +24,6 @@ const createFaculty = catchAsync(async (req, res) => {
 
   const { password, faculty: facultyData } = req.body;
 
-  // console.log(facultyData);
-  // console.log(req.body);
   //will call service function to send data
   const result = await UserServices.createFacultyIntoDB(password, facultyData);
 // console.log(result);
