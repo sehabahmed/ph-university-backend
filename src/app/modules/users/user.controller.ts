@@ -8,7 +8,6 @@ const createStudent = catchAsync(async (req, res) => {
 
   const { password, student: studentData } = req.body;
 
-
   //will call service function to send data
   const result = await UserServices.createStudentIntoDB(password, studentData);
 
@@ -21,12 +20,11 @@ const createStudent = catchAsync(async (req, res) => {
 });
 
 const createFaculty = catchAsync(async (req, res) => {
-
   const { password, faculty: facultyData } = req.body;
 
   //will call service function to send data
   const result = await UserServices.createFacultyIntoDB(password, facultyData);
-// console.log(result);
+  // console.log(result);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -35,10 +33,7 @@ const createFaculty = catchAsync(async (req, res) => {
   });
 });
 
-
-
 const createAdmin = catchAsync(async (req, res) => {
-
   const { password, admin: adminData } = req.body;
 
   //will call service function to send data
@@ -52,8 +47,39 @@ const createAdmin = catchAsync(async (req, res) => {
   });
 });
 
+const changeStatus = catchAsync(async (req, res) => {
+  const { id } = req.params;
+
+  const result = await UserServices.changeStatus(id, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User status updated Successfully',
+    data: result,
+  });
+});
+
+const getMe = catchAsync(async (req, res) => {
+  // const token = req.headers.authorization;
+
+  const { userId, role } = req.user;
+
+  //will call service function to send data
+  const result = await UserServices.getMe(userId, role);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User data retrieve Successfully',
+    data: result,
+  });
+});
+
 export const userControllers = {
   createStudent,
   createFaculty,
-  createAdmin
+  createAdmin,
+  changeStatus,
+  getMe,
 };

@@ -18,6 +18,7 @@ import { AcademicDepartment } from '../academicDepartment/academicDepertment.mod
 import { Admin } from '../Admin/admin.model';
 import { Faculty } from '../Faculty/faculty.model';
 import { TAdmin } from '../Admin/admin.interface';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   //create a new user object
@@ -49,6 +50,8 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     session.startTransaction();
     //set automatically generated id
     userData.id = await generateStudentId(admissionSemester);
+    //send image to cloudinary
+    sendImageToCloudinary();
     //create a user (transaction - 1)
     const newUser = await User.create([userData], { session }); //array
 
@@ -188,8 +191,38 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
   }
 };
 
+const changeStatus = async (id: string, payload: { status: string }) => {
+  const result = await User.findByIdAndUpdate(id, payload, { new: true });
+
+  return result;
+};
+
+const getMe = async (userId: string, role: string) => {
+  // const decoded = verifyToken(token, config.jwt_access_secret as string);
+
+  // const { userId, role } = decoded;
+
+  let result = null;
+
+  if (role === 'student') {
+    result = await StudentModel.findOne({ id: userId });
+  }
+
+  if (role === 'faculty') {
+    result = await Faculty.findOne({ id: userId });
+  }
+
+  if (role === 'admin') {
+    result = await Admin.findOne({ id: userId });
+  }
+
+  return result;
+};
+
 export const UserServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
+  changeStatus,
+  getMe,
 };
