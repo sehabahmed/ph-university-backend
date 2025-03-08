@@ -20,7 +20,7 @@ import { Faculty } from '../Faculty/faculty.model';
 import { TAdmin } from '../Admin/admin.interface';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
-const createStudentIntoDB = async (password: string, payload: TStudent) => {
+const createStudentIntoDB = async (file: any, password: string, payload: TStudent) => {
   //create a new user object
 
   const userData: Partial<TUser> = {};
@@ -50,8 +50,12 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     session.startTransaction();
     //set automatically generated id
     userData.id = await generateStudentId(admissionSemester);
+
+    const imageName = `${userData.id}${payload?.name?.firstName}`;
+    const path = file?.path;
+
     //send image to cloudinary
-    sendImageToCloudinary();
+    const {secure_url} = await sendImageToCloudinary( imageName, path );
     //create a user (transaction - 1)
     const newUser = await User.create([userData], { session }); //array
 
@@ -62,6 +66,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
 
     payload.id = newUser[0].id; //embedding Id
     payload.user = newUser[0]._id; //reference _id
+    payload.profileImg = secure_url;
 
     //create a student (transaction - 2)
 
@@ -78,6 +83,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   } catch (err) {
     await session.abortTransaction();
     await session.endSession();
+    throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to Create Student');
   }
 };
 

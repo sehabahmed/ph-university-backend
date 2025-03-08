@@ -4,12 +4,11 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 
 const createStudent = catchAsync(async (req, res) => {
-  //creating a schema validation using Joi
 
   const { password, student: studentData } = req.body;
 
   //will call service function to send data
-  const result = await UserServices.createStudentIntoDB(password, studentData);
+  const result = await UserServices.createStudentIntoDB(req.file, password, studentData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
