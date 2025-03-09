@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { TCourseMarks, TEnrolledCourse } from './enrolledCourse.route';
+import { TCourseMarks, TEnrolledCourse } from './enrolledCourse.interface';
 import { Grade } from './enrolledCourse.constant';
 
 const courseMarksSchema = new Schema<TCourseMarks>(
@@ -42,7 +42,7 @@ const enrolledCourseSchema = new Schema<TEnrolledCourse>({
     ref: 'AcademicSemesterModel',
     required: true,
   },
-  offerredCourse: {
+  offeredCourse: {
     type: Schema.Types.ObjectId,
     ref: 'OfferedCourse',
     required: true,
@@ -66,7 +66,10 @@ const enrolledCourseSchema = new Schema<TEnrolledCourse>({
     type: Boolean,
     default: false,
   },
-  courseMarks: { type: courseMarksSchema },
+  courseMarks: {
+    type: courseMarksSchema,
+    default: {},
+  },
   grade: {
     type: String,
     enum: Grade,

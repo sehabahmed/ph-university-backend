@@ -2,6 +2,7 @@ import { UserServices } from './user.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
+import AppError from '../../errors/AppError';
 
 const createStudent = catchAsync(async (req, res) => {
 
@@ -21,8 +22,18 @@ const createStudent = catchAsync(async (req, res) => {
 const createFaculty = catchAsync(async (req, res) => {
   const { password, faculty: facultyData } = req.body;
 
+  // Ensure that facultyData is correctly parsed
+  if (!facultyData) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Faculty data is required');
+  }
+
+  // Ensure that req.file is present
+  if (!req.file) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Profile image is required');
+  }
+
   //will call service function to send data
-  const result = await UserServices.createFacultyIntoDB(password, facultyData);
+  const result = await UserServices.createFacultyIntoDB(req.file, password, facultyData);
   // console.log(result);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -36,7 +47,7 @@ const createAdmin = catchAsync(async (req, res) => {
   const { password, admin: adminData } = req.body;
 
   //will call service function to send data
-  const result = await UserServices.createAdminIntoDB(password, adminData);
+  const result = await UserServices.createAdminIntoDB(req.file, password, adminData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
