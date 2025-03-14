@@ -12,6 +12,7 @@ const router = express.Router();
 
 router.post(
   '/create-faculty',
+  
   validateRequest(createFacultyValidationSchema),
   FacultyControllers.createFaculty,
 );
