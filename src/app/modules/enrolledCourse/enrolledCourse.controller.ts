@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
-import sendResponse from '../../utils/sendResponse';
+import sendResponse, { TMeta } from '../../utils/sendResponse';
 import { EnrolledCourseServices } from './enrolledCourse.service';
 
 const createEnrolledCourse = catchAsync(async (req, res) => {
@@ -22,17 +22,24 @@ const createEnrolledCourse = catchAsync(async (req, res) => {
 const getMyEnrolledCourses = catchAsync(async (req, res) => {
   const studentId = req.user.userId;
 
-  const result = await EnrolledCourseServices.getMyEnrolledCousesFromDb(
+  const {meta, result} = await EnrolledCourseServices.getMyEnrolledCousesFromDb(
     studentId,
     req.query,
   );
+
+  const formattedMeta: TMeta = {
+    limit: meta.limit,
+    page: meta.page,
+    total: meta.total,
+    totalPages: meta.totalPages,
+  }
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'My Enrolled Course Retrieve Successfully',
-    meta: result.meta,
-    data: result.result,
+    meta: formattedMeta,
+    data: result,
   });
 });
 

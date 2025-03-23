@@ -14,7 +14,7 @@ const createCourseIntoDB = async (payload: TCourse) => {
 
 const getAllCoursesFromDB = async (query: Record<string, unknown>) => {
   const courseQuery = new QueryBuilder(
-    Course.find().populate('preRequisiteCourse.course'),
+    Course.find().populate('preRequisiteCourses.course'),
     query,
   )
     .search(courseSearchableFields)
@@ -41,7 +41,7 @@ const getSingleCourseFromDB = async (id: string) => {
 };
 
 const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
-  const { preRequisiteCourse, ...courseRemainingData } = payload;
+  const { preRequisiteCourses, ...courseRemainingData } = payload;
 
   const session = await mongoose.startSession();
 
@@ -64,9 +64,9 @@ const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
     }
 
     //Check if there is any pre requisite course to update
-    if (preRequisiteCourse && preRequisiteCourse.length > 0) {
+    if (preRequisiteCourses && preRequisiteCourses.length > 0) {
       //filter out deleted Fields
-      const deletedPreRequisites = preRequisiteCourse
+      const deletedPreRequisites = preRequisiteCourses
         .filter((el) => el.course && el.isDeleted)
         .map((el) => el.course);
 
@@ -89,7 +89,7 @@ const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
       }
 
       //Filter out the new course fields
-      const newPreRequisites = preRequisiteCourse?.filter(
+      const newPreRequisites = preRequisiteCourses?.filter(
         (el) => el.course && !el.isDeleted,
       );
 

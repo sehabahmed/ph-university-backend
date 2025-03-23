@@ -164,7 +164,7 @@ const getMyEnrolledCousesFromDb = async (
     .paginate()
     .fields();
 
-  const meta = enrolledCourseQuery.countTotal();
+  const meta = await enrolledCourseQuery.countTotal();
   const result = await enrolledCourseQuery.modelQuery;
 
   return {
