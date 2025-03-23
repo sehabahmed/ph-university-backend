@@ -109,7 +109,11 @@ const studentValidationSchema = new Schema<TStudent>({
     type: Schema.Types.ObjectId,
     ref: 'AcademicDepartment',
   },
-  profileImg: { type: String },
+  academicFaculty: {
+    type: Schema.Types.ObjectId,
+    ref: 'AcademicFaculty',
+  },
+  profileImg: { type: String, default: '' },
   isDeleted: {
     type: Boolean,
     default: false,

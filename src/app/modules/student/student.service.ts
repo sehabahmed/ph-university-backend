@@ -8,80 +8,12 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import { studentSearchableFields } from './student.constant';
 
 const createStudentIntoDB = async (payload: TStudent) => {
-  //static method
-  // if(await TStudent.isUserExists(studentData.id)){
-  //   throw new Error("User Already Exists!")
-  // }
   const result = await StudentModel.create(payload);
 
   return result;
 };
 
 const getAllStudentsFromDb = async (query: Record<string, unknown>) => {
-  //Search Query
-  // const studentSearchableFields = ['email', 'name.firstName', 'presentAddress'];
-
-  // const queryObj = { ...query }; //copy
-
-  // let searchTerm = '';
-
-  // if (query?.searchTerm) {
-  //   searchTerm = query?.searchTerm as string;
-  // }
-
-  // const searchQuery = StudentModel.find({
-  //   $or: studentSearchableFields.map((field) => ({
-  //     [field]: { $regex: searchTerm, $options: 'i' },
-  //   })),
-  // });
-
-  // console.log({query}, {queryObj});
-
-  //Filtering
-
-  // excludeFields.forEach((elem) => delete queryObj[elem]);
-
-  // const filterQuery = searchQuery.find(queryObj).populate('admissionSemester');
-
-  //Sorting
-
-  // let sort = '-createdAt';
-
-  // if (query.sort) {
-  //   sort = query.sort as string;
-  // }
-
-  // const sortQuery = filterQuery.sort(sort);
-
-  // let page = 1;
-  // let limit = 1;
-  // let skip = 0;
-
-  // if (query.limit) {
-  //   limit = Number(query.limit);
-  // }
-  // if (query.page) {
-  //   page = Number(query.page);
-  //   skip = (page - 1) * limit;
-  // }
-
-  //   const paginateQuery = sortQuery.skip(skip);
-
-  //   const limitQuery = paginateQuery.limit(limit);
-
-  //   // Field Limiting
-
-  //   let fields = '-__v';
-
-  //   if (query.fields) {
-  //     fields = (query.fields as string).split(',').join(' ');
-  //     // console.log({fields});
-  //   }
-
-  //   const fieldQuery = await limitQuery.select(fields);
-
-  //   return fieldQuery;
-
   const studentQuery = new QueryBuilder(
     StudentModel.find()
       .populate('user')

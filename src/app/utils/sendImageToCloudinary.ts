@@ -6,7 +6,7 @@ import fs from 'fs/promises';
 export const sendImageToCloudinary = async (
   imageName: string,
   path: string,
-) => {
+): Promise<Record<string, unknown>> => {
   try {
     // Configuration
     cloudinary.config({
@@ -25,6 +25,8 @@ export const sendImageToCloudinary = async (
     return uploadResult;
   } catch (err) {
     console.log('cloudinary upload failed', err);
+    return {success: false, error: err}
+
   }
 };
 

@@ -22,8 +22,8 @@ export const MonthsSchema: TMonths[] = [
 
 export const AcademicSemesterName: TAcademicSemesterName[] = [
   'Autumn',
-  'Spring',
-  'Winter',
+  'Summer',
+  'Fall',
 ];
 
 export const AcademicSemesterCode: TAcademicSemesterCode[] = ['01', '02', '03'];
@@ -31,6 +31,6 @@ export const AcademicSemesterCode: TAcademicSemesterCode[] = ['01', '02', '03'];
 //name and code matching variable
 export const AcademicSemesterNameCodeMapper: TAcademicSemesterNameCodeMapper = {
   Autumn: '01',
-  Spring: '02',
-  Winter: '03',
+  Summer: '02',
+  Fall: '03',
 };

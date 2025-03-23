@@ -5,11 +5,14 @@ import catchAsync from '../../utils/catchAsync';
 import AppError from '../../errors/AppError';
 
 const createStudent = catchAsync(async (req, res) => {
-
   const { password, student: studentData } = req.body;
 
   //will call service function to send data
-  const result = await UserServices.createStudentIntoDB(req.file, password, studentData);
+  const result = await UserServices.createStudentIntoDB(
+    req.file,
+    password,
+    studentData,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -27,13 +30,12 @@ const createFaculty = catchAsync(async (req, res) => {
     throw new AppError(httpStatus.BAD_REQUEST, 'Faculty data is required');
   }
 
-  // Ensure that req.file is present
-  if (!req.file) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'Profile image is required');
-  }
-
   //will call service function to send data
-  const result = await UserServices.createFacultyIntoDB(req.file, password, facultyData);
+  const result = await UserServices.createFacultyIntoDB(
+    req.file,
+    password,
+    facultyData,
+  );
   // console.log(result);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -47,7 +49,11 @@ const createAdmin = catchAsync(async (req, res) => {
   const { password, admin: adminData } = req.body;
 
   //will call service function to send data
-  const result = await UserServices.createAdminIntoDB(req.file, password, adminData);
+  const result = await UserServices.createAdminIntoDB(
+    req.file,
+    password,
+    adminData,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -71,8 +77,6 @@ const changeStatus = catchAsync(async (req, res) => {
 });
 
 const getMe = catchAsync(async (req, res) => {
-  // const token = req.headers.authorization;
-
   const { userId, role } = req.user;
 
   //will call service function to send data
