@@ -111,7 +111,7 @@ const createFacultyIntoDB = async (
   password: string,
   payload: TFaculty,
 ) => {
-  // console.log(payload);
+
   //Create a new user object
   const userData: Partial<TUser> = {};
 

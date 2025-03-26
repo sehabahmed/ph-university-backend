@@ -8,6 +8,7 @@ import bcrypt from 'bcrypt';
 import { createToken, verifyToken } from './auth.utils';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../../utils/sendEmail';
+import logger from '../../utils/logger';
 
 const loginUser = async (payload: TLoginUser) => {
   //checking if the user is exists
@@ -211,9 +212,8 @@ const forgetPassword = async (userId: string) => {
 
     sendEmail(user.email, resetUILink);
 
-    console.log(resetUILink);
   } catch (err) {
-    console.log('Error in forget password', err);
+    logger.error('Error in forget password', err);
   }
 };
 

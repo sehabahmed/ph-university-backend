@@ -36,7 +36,7 @@ const createFaculty = catchAsync(async (req, res) => {
     password,
     facultyData,
   );
-  // console.log(result);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

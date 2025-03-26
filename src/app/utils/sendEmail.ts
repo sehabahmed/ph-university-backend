@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import logger from './logger';
 
 export const sendEmail = async (to: string, html: string) => {
   try {
@@ -12,16 +13,16 @@ export const sendEmail = async (to: string, html: string) => {
         },
       });
     
-      const info = await transporter.sendMail({
-        from: 'sehabahmed50100@gmail.com', // sender address
-        to, // list of receivers
-        subject: 'Change your password!', // Subject line
-        text: 'Reset your password within 10 minutes.', // plain text body
-        html, // html body
+      await transporter.sendMail({
+        from: 'sehabahmed50100@gmail.com',
+        to,
+        subject: 'Change your password!',
+        text: 'Reset your password within 10 minutes.',
+        html, 
       });
 
-      console.log('Message Sent: %s', info.messageId);
+      
   } catch (err){
-    console.log("Error Sending Email",  err)
+    logger.error("Error Sending Email",  err)
   }
 };

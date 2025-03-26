@@ -133,7 +133,7 @@ studentValidationSchema.pre('findOne', function (next) {
 
 studentValidationSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true }}});
-  // console.log(this.pipeline());
+
   next();
 });
 

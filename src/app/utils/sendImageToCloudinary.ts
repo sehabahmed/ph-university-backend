@@ -2,6 +2,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import config from '../index';
 import multer from 'multer';
 import fs from 'fs/promises';
+import logger from './logger';
 
 export const sendImageToCloudinary = async (
   imageName: string,
@@ -24,7 +25,7 @@ export const sendImageToCloudinary = async (
 
     return uploadResult;
   } catch (err) {
-    console.log('cloudinary upload failed', err);
+    logger.error('cloudinary upload failed', err);
     return {success: false, error: err}
 
   }

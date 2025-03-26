@@ -23,7 +23,6 @@ const findLastStudentId = async () => {
 
 // id will generate by following: year, semesterCode, 4 digit number
 export const generateStudentId = async (payload: TAcademicSemester) => {
-  //   console.log(await findLastStudentId());
 
   let currentId = (0).toString();
 
@@ -45,7 +44,7 @@ export const generateStudentId = async (payload: TAcademicSemester) => {
   let incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
 
   incrementId = `${payload.year}${payload.code}${incrementId}`;
-  // console.log(` This is increment ID:  ${incrementId}`);
+
   return incrementId;
 };
 
@@ -79,7 +78,7 @@ export const generatedFacultyId = async () => {
   let incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
 
   incrementId = `F-${incrementId}`;
-// console.log(incrementId);
+
   return incrementId;
 };
 

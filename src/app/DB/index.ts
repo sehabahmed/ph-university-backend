@@ -1,6 +1,7 @@
 import config from '../index';
 import { USER_ROLE } from '../modules/users/user.constant';
 import { User } from '../modules/users/user.model';
+import logger from '../utils/logger';
 
 const superUser = {
   id: '0001',
@@ -24,7 +25,7 @@ const seedSuperAdmin = async () => {
       await User.create(superUser);
     }
   } catch (err) {
-    console.log('Error Seeding super admin', err);
+    logger.error('Error Seeding super admin', err);
   }
 };
 
