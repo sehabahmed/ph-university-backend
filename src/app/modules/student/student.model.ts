@@ -54,70 +54,88 @@ const localGuardianValidationSchema = new Schema<LocalGuardian>({
   address: { type: String, required: true },
 });
 
-const studentValidationSchema = new Schema<TStudent>({
-  id: { type: String, required: true, unique: true },
-  user: {
-    type: Schema.Types.ObjectId,
-    required: [true, 'User ID is required'],
-    unique: true,
-    ref: 'User',
-  },
-  name: {
-    type: userNameValidationSchema,
-    required: [true, 'Name is Required'],
-  },
-  gender: {
-    type: String,
-    enum: {
-      values: ['male', 'female', 'other'],
-      message: '{VALUE} is not valid',
+const studentValidationSchema = new Schema<TStudent>(
+  {
+    id: { type: String, required: true, unique: true },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User ID is required'],
+      unique: true,
+      ref: 'User',
     },
-    required: true,
-  },
-  dateOfBirth: { type: String },
-  email: {
-    type: String,
-    required: true,
-    validate: {
-      validator: (value: string) => {
-        return validator.isEmail(value);
+    name: {
+      type: userNameValidationSchema,
+      required: [true, 'Name is Required'],
+    },
+    gender: {
+      type: String,
+      enum: {
+        values: ['male', 'female', 'other'],
+        message: '{VALUE} is not valid',
       },
-      message: '{VALUE} is not a valid email type',
+      required: true,
+    },
+    dateOfBirth: { type: String },
+    email: {
+      type: String,
+      required: true,
+      validate: {
+        validator: (value: string) => {
+          return validator.isEmail(value);
+        },
+        message: '{VALUE} is not a valid email type',
+      },
+    },
+    contactNo: { type: String, required: true },
+    emergencyContactNo: { type: String, required: true },
+    bloodGroup: {
+      type: String,
+      enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+    },
+    presentAddress: { type: String, required: true },
+    permanentAddress: { type: String, required: true },
+    guardian: {
+      type: guardianValidationSchema,
+      required: [true, 'Guardian Name is Required'],
+    },
+    localGuardian: {
+      type: localGuardianValidationSchema,
+      required: [true, 'Local Guardian Name is Required'],
+    },
+    admissionSemester: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicSemesterModel',
+    },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicDepartment',
+    },
+    academicFaculty: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicFaculty',
+    },
+    profileImg: { type: String, default: '' },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
   },
-  contactNo: { type: String, required: true },
-  emergencyContactNo: { type: String, required: true },
-  bloodGroup: {
-    type: String,
-    enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+  {
+    toJSON: {
+      virtuals: true,
+    },
   },
-  presentAddress: { type: String, required: true },
-  permanentAddress: { type: String, required: true },
-  guardian: {
-    type: guardianValidationSchema,
-    required: [true, 'Guardian Name is Required'],
-  },
-  localGuardian: {
-    type: localGuardianValidationSchema,
-    required: [true, 'Local Guardian Name is Required'],
-  },
-  admissionSemester: {
-    type: Schema.Types.ObjectId,
-    ref: 'AcademicSemesterModel',
-  },
-  academicDepartment: {
-    type: Schema.Types.ObjectId,
-    ref: 'AcademicDepartment',
-  },
-  academicFaculty: {
-    type: Schema.Types.ObjectId,
-    ref: 'AcademicFaculty',
-  },
-  profileImg: { type: String, default: '' },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-  },
+);
+
+// generating full name
+studentValidationSchema.virtual('fullName').get(function () {
+  return (
+    this?.name?.firstName +
+    ' ' +
+    this?.name?.middleName +
+    ' ' +
+    this?.name?.lastName
+  );
 });
 
 //query middleware
@@ -132,7 +150,7 @@ studentValidationSchema.pre('findOne', function (next) {
 });
 
 studentValidationSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { isDeleted: { $ne: true }}});
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
 
   next();
 });

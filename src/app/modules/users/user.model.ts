@@ -64,11 +64,14 @@ userSchema.statics.isPasswordMatched = async function (
   return bcrypt.compare(plaintTextPassword, hashedPassword);
 };
 
-userSchema.statics.isJWTIssuedBeforePasswordChanged = function (passwordChangedTimeStamp: Date,
-  jwtIssuedTimeStamp: number){
-    const passwordChangedTime = new Date(passwordChangedTimeStamp).getTime() / 1000;
-    return passwordChangedTime > jwtIssuedTimeStamp;
-  }
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
+  passwordChangedTimeStamp: Date,
+  jwtIssuedTimeStamp: number,
+) {
+  const passwordChangedTime =
+    new Date(passwordChangedTimeStamp).getTime() / 1000;
+  return passwordChangedTime > jwtIssuedTimeStamp;
+};
 
 //Model
 

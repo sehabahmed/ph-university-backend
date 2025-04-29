@@ -10,7 +10,7 @@ const app: Application = express();
 //middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({origin: ['http://localhost:5173']}));
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 //application routes
 app.use('/api/v1/', router);
 
@@ -26,10 +26,10 @@ const test = async (req: Request, res: Response) => {
   // Promise.reject();
 
   const a = 90;
-  res.send(a)
-}
+  res.send(a);
+};
 
-app.get('/', test)
+app.get('/', test);
 
 //Global Error Handler
 app.use(globalErrorHandler);

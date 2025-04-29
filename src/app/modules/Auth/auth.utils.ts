@@ -1,4 +1,4 @@
-import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 
@@ -7,16 +7,11 @@ export const createToken = (
   secret: string,
   expiresIn: string,
 ) => {
-
-  if(!secret){
-    throw new AppError(httpStatus.NOT_FOUND, "JWT Secret is not provided")
+  if (!secret) {
+    throw new AppError(httpStatus.NOT_FOUND, 'JWT Secret is not provided');
   }
 
-  const options: SignOptions = {
-    expiresIn
-  }
-
-  return jwt.sign(jwtPayload, secret, options);
+  return jwt.sign(jwtPayload, secret, { expiresIn });
 };
 
 export const verifyToken = (token: string, secret: string) => {
